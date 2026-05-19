@@ -43,6 +43,12 @@ async function run() {
             res.send(result)
         })
 
+        app.get('/featured-rooms', async (req, res) => {
+            const cursor = roomsCollection.find().sort({ _id: -1 }).limit(6);
+            const result = await cursor.toArray();
+            res.send(result);
+        })
+
         console.log("Pinged your deployment. You successfully connected to MongoDB!");
     } finally {
         // await client.close();
