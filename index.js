@@ -73,10 +73,22 @@ async function run() {
 
 
         app.delete('/all-rooms/:id', async (req, res) => {
-                const id = req.params.id;
-                const query = { _id: new ObjectId(id) };
-                const result = await roomsCollection.deleteOne(query);
-                res.send(result);
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) };
+            const result = await roomsCollection.deleteOne(query);
+            res.send(result);
+        });
+
+        app.patch("/all-rooms/:id", async (req, res) => {
+                const { id } = req.params;
+                const updatedData = req.body;
+                console.log("Incoming update data:", updatedData);
+
+                const result = await roomsCollection.updateOne(
+                    { _id: new ObjectId(id) },
+                    { $set: updatedData }
+                );
+                res.json(result);
         });
 
 
