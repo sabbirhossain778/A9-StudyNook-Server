@@ -59,6 +59,28 @@ async function run() {
             }
         });
 
+        app.get('/my-listings', async (req, res) => {
+            try {
+                const email = req.query.email;
+                const query = { userEmail: email };
+                const result = await roomsCollection.find(query).toArray();
+                res.send(result);
+            } catch (error) {
+                console.error("Error fetching rooms:", error);
+                res.status(500).send({ error: "Failed to fetch rooms" });
+            }
+        });
+
+
+        app.delete('/all-rooms/:id', async (req, res) => {
+                const id = req.params.id;
+                const query = { _id: new ObjectId(id) };
+                const result = await roomsCollection.deleteOne(query);
+                res.send(result);
+        });
+
+
+
         console.log("Pinged your deployment. You successfully connected to MongoDB!");
     } finally {
         // await client.close();
