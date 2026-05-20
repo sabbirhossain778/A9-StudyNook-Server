@@ -8,11 +8,8 @@ app.use(cors())
 app.use(express.json())
 const port = process.env.PORT || 8000
 
-// tE62LgDmjtuO43zK
-// studynook
 
-
-const uri = "mongodb+srv://studynook:tE62LgDmjtuO43zK@cluster0.3rt6ag9.mongodb.net/?appName=Cluster0";
+const uri = process.env.MONGODB_URI;
 
 const client = new MongoClient(uri, {
     serverApi: {
@@ -48,6 +45,19 @@ async function run() {
             const result = await cursor.toArray();
             res.send(result);
         })
+
+        app.post('/add-room', async (req, res) => {
+            try {
+                const roomData = req.body;
+                // console.log('Received Room Data:', roomData);
+
+                const result = await roomsCollection.insertOne(roomData);
+                res.status(201).json(result);
+            } catch (error) {
+                console.error("Database Insert Error:", error);
+                res.status(500).json({ error: "Failed to insert room data" });
+            }
+        });
 
         console.log("Pinged your deployment. You successfully connected to MongoDB!");
     } finally {
